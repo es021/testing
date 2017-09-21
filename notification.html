@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Notification</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <script>
+
+            var WinNotification = function () {
+                var obj = this;
+
+                this.TIMEOUT_CLOSE = 5000;
+                this.icon = "asset/wp.png";
+
+                this.TAG_MESSAGE = "message";
+                this.TAG_SESSION = "session";
+                this.TAG_DEFAULT = "default";
+
+                this.window_has_focus = true;
+
+                window.onblur = function () {
+                    obj.window_has_focus = false;
+                };
+
+                window.onfocus = function () {
+                    obj.window_has_focus = true;
+                };
+
+                this.init();
+            };
+
+            WinNotification.prototype.init = function () {
+                var obj = this;
+                WinNotification = window.Notification;
+                WinNotification.requestPermission(function () {
+                    if (WinNotification.permission === "denied") {
+                        obj.deniedHandler();
+                    }
+                });
+            };
+
+            WinNotification.prototype.deniedHandler = function () {
+                console.log("show how to give access in the future.. a popup maybe?");
+            };
+
+            WinNotification.prototype.windowFocus = function () {
+                if (!this.window_has_focus) {
+                    window.focus();
+                }
+            };
+
+            WinNotification.prototype.open = function (title, body, onclick, tag) {
+
+                var obj = this;
+                if (typeof tag === "undefined") {
+                    tag = this.TAG_DEFAULT;
+                }
+                var args = {
+                    body: body,
+                    tag: tag,
+                    icon: this.icon
+                };
+
+                var notification = new WinNotification(title, args);
+
+                notification.onclick = function () {
+
+
+
+                    onclick();
+                    obj.windowFocus();
+                    this.close();
+                };
+
+                setTimeout(notification.close.bind(notification), this.TIMEOUT_CLOSE);
+            };
+
+
+            // Usage
+            winNotification = new WinNotification();
+
+            title = "You Have New Message";
+            body = "From John Snow";
+            function onclick() {
+
+                if (!window.closed) {
+                    console.log("not closed");
+                } else {
+                    location.reload();
+                }
+
+                console.log("do onclick");
+
+                //location.reload();
+            }
+
+            function test() {
+                winNotification.open(title, body, onclick, winNotification.TAG_MESSAGE);
+
+            }
+
+        </script>
+        <button onclick="test()">Show</button>
+
+
+    </body>
+</html>

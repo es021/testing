@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>CSS Grid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+
+            html {
+                height: 100%;
+            }
+
+            body{
+                text-align: center;
+                min-height: 100%;
+                display: grid;
+                margin: 0;
+
+                grid-template-columns: 1fr 4fr 1fr;
+                grid-template-rows: 1fr 5fr 1fr;
+                grid-template-areas: 
+                    "header header header" 
+                    "left_nav content right_nav" 
+                    "footer footer footer";
+            }
+
+            header, .content, .left_nav, .right_nav, footer{
+                border: 1px dotted gray;
+            }
+
+            /** by size ****************/
+
+            header{
+                grid-area: header;
+            }
+
+            .content{
+                grid-area: content;
+            }
+
+            .left_nav{
+                grid-area: left_nav;
+            }
+
+            .right_nav{
+                grid-area: right_nav;
+            }
+
+            footer{
+                grid-area: footer;
+            }
+
+
+            .badge{
+                width: 50%;
+                display: flex;
+                align-items: center;
+
+                background: blue;
+                color: white;
+                max-width: 40px;
+                padding: 0px;
+                -webkit-transition: max-width 0.5s ease-in-out;
+                -moz-transition: max-width 0.5s ease-in-out;
+                -o-transition: max-width 0.5s ease-in-out;
+                transition: max-width 0.5s ease-in-out;
+                cursor: pointer;
+
+                overflow-x: hidden;
+            }
+
+            .label{
+
+                margin: 0 0px;
+                color: white;
+                opacity: 0;
+
+                -webkit-transition: opacity 0.5s ease-in-out;
+                -moz-transition: opacity 0.5s ease-in-out;
+                -o-transition: opacity 0.5s ease-in-out;
+                transition: opacity 0.5s ease-in-out;
+
+            }
+
+            .badge:hover{
+                max-width:  200px;
+            }
+
+            .badge:hover .label{
+                opacity: 1;
+
+            }
+
+        </style>
+
+    </head>
+    <body>
+
+        <header>This is header</header>
+
+        <div class="left_nav">left nav</div>
+        <div class="content">This is content
+
+            <div class="badge">
+                2 <span class="label">Heyyaa</span>
+            </div>
+
+        </div>
+        <div class="right_nav">right nav</div>
+
+        <footer>This is footer</footer>
+
+    </body>
+
+</html>
