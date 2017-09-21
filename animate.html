@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--                4.2KB-->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"> 
+
+
+        <!--                11KB but then I have more control here-->
+        <script src="./js/anime.min.js"></script>
+
+    </head>
+    <body>
+        <!-- ANIMATE CSS EXAMPLE -->
+        <!-- https://daneden.github.io/animate.css/ -->
+        <!--        <h1 class="animated infinite bounce">Example</h1>
+                <div class="animated tada">Example</div> -->
+
+
+        <!-- ANIME JS EXAMPLE -->
+        <div class="test">
+            Test
+        </div>
+        <script>
+            anime({
+                targets: 'h4.test',
+                translateX: [
+                    {value: 100, duration: 1200},
+                    {value: 0, duration: 800}
+                ],
+                rotate: '1turn',
+                //backgroundColor: '#FFF',
+                duration: 2000,
+                loop: true
+            });
+        </script>
+
+
+    </body>
+</html>
