@@ -20,6 +20,15 @@ and open the template in the editor.
         <script src="../../include/jquery-3.1.1.min.js"></script>
         <style>
 
+            :root {
+                --light_yellow: #e7efc5; /* yellow */
+                --light_orange: #f2dda4; /* orange */
+                --dark_purple: #413c58; /* dark-purple */
+                --light_blue: #a3c4bc; /* blue */ 
+            }
+
+
+
             html, body{
                 font-family: "Arial";
                 height: 100%;
@@ -31,11 +40,14 @@ and open the template in the editor.
 
             #app{
                 background: linear-gradient(-30deg, #1A54A2, #139B53);
+
+                background: white;
+                color: var(--dark_purple);
                 min-width: 100%;
                 height: 100vh;
                 display: grid;
 
-                grid-template-rows: 1fr 5fr 1fr;
+                grid-template-rows: 1fr 8fr 1fr;
                 grid-template-area: 
                     "header"
                     "content"
@@ -43,6 +55,30 @@ and open the template in the editor.
 
                 text-align: center;
             }
+
+            .content{
+                grid-area:"content";
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .header{
+                background: var(--light_blue);
+                color: var(--dark_purple);
+                grid-area:"header";
+                display:flex;
+                align-items: center;
+                justify-content: center;
+
+            }
+            .footer{
+                grid-area:"footer";
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+
 
             #popup_wrapper{
                 position: absolute;
@@ -80,14 +116,13 @@ and open the template in the editor.
                 align-items: center;
                 justify-content: center;
                 padding: 5px;
-                font-weight: bold;
-                background: blue;
-                color: white;
+                background: var(--light_orange);
             }
 
             #popup_wrapper #popup_body .popup_content{
                 grid-area:"popup_content";
                 padding: 5px;
+                background: white;
             }
 
             #popup_wrapper #popup_body .popup_close{
@@ -109,26 +144,24 @@ and open the template in the editor.
                 z-index: 99;
             }
 
-            .content{
-                grid-area:"content";
-                display:flex;
+
+            .btn_circle_wrapper{
+                width: 100px;
+                height: 100px;
+                display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
-
-
-
             .btn_circle{
+                font-size:30px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background-color: grey;
                 color:white;
-                margin: 5px;
-                padding: 0;
-                width: 50px;
-                height: 50px;
+                width: 85%;
+                height: 85%;
                 border-radius: 100%;
                 cursor: pointer;
             }
@@ -188,11 +221,15 @@ and open the template in the editor.
             <div class="header">HEADER</div>
             <div class="content">
 
-                <div class="btn_circle btn_green">
-                    OK
+                <div class="btn_circle_wrapper">
+                    <div class="btn_circle btn_green">
+                        OK
+                    </div>
                 </div>
-                <div class="btn_circle btn_red">
-                    NO
+                <div class="btn_circle_wrapper">
+                    <div class="btn_circle btn_red">
+                        NO
+                    </div>
                 </div>
             </div>
             <div class="header">FOOTER</div>
@@ -259,7 +296,6 @@ and open the template in the editor.
                     animeExec("#" + popup.dom_body.attr("id"), prop);
                 };
 
-                popup.open();
 
                 popup.dom_close.click(function () {
                     popup.close();
@@ -285,31 +321,35 @@ and open the template in the editor.
                     }
                 }
 
+                btn_circle.dimension = "85%";
+                console.log(btn_circle.dimension);
+                btn_circle.font_size = btn_circle.css("font-size");
+
                 btn_circle.click(function () {
-
-                    var offset = -5;
-                    var postfix = "px";
-
-                    var oriPad = "5px";
-                    var newPad = offsetNumberCss(oriPad, offset, postfix);
+                    var oriSize = btn_circle.dimension;
+                    var newSize = offsetNumberCss(oriSize, 15, "%");
 
                     var expandRate = 200;
                     var contractRate = 300;
 
+                    var oriFont = btn_circle.font_size;
+                    var newFont = offsetNumberCss(oriFont, 20, "px");
+
                     var prop = {
-                        margin: [
-                            {value: newPad, duration: expandRate},
-                            {value: oriPad, duration: contractRate}
+                        width: [
+                            {value: newSize, duration: expandRate},
+                            {value: oriSize, duration: contractRate}
                         ],
-                        padding: [
-                            {value: oriPad, duration: expandRate},
-                            {value: newPad, duration: contractRate}
-                        ],
-                        fontSize: [
-                            {value: '190%', duration: contractRate},
-                            {value: '100%', duration: expandRate}
+                        height: [
+                            {value: newSize, duration: expandRate},
+                            {value: oriSize, duration: contractRate}
+                        ]
+                        , fontSize: [
+                            {value: newFont, duration: contractRate},
+                            {value: oriFont, duration: expandRate}
                         ]
                     };
+
 
                     var openDelay = (expandRate + contractRate) - 100;
 
@@ -333,7 +373,6 @@ and open the template in the editor.
 
                     var animeObj = {
                         targets: target,
-                        duration: 2000,
                         loop: false
                     };
 
