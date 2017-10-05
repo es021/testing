@@ -11,13 +11,152 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!--                4.2KB-->
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"> 
+        <!--        <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"> -->
 
 
         <!--                11KB but then I have more control here-->
         <script src="./js/anime.min.js"></script>
+        <script src="../../include/jquery-3.1.1.min.js"></script>
+        <style>
 
+            html, body{
+                font-family: "Arial";
+                height: 100%;
+            }
+
+            body{
+                margin: 0;
+            }
+
+            #app{
+                background: linear-gradient(-30deg, #1A54A2, #139B53);
+                min-width: 100%;
+                height: 100vh;
+                display: grid;
+
+                grid-template-rows: 1fr 5fr 1fr;
+                grid-template-area: 
+                    "header"
+                    "content"
+                    "footer";
+
+                text-align: center;
+            }
+
+            #popup_wrapper{
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 100%;
+                height: 100vh;
+            }
+
+            #popup_wrapper #popup_body{
+                position: relative;
+                width: 100%;
+                height: 70%;
+                margin: 0 10px;
+                width: 0;
+                height: 0;
+                max-width: 400px;
+                background-color: white;
+                border-radius: 10px;
+                overflow: hidden;
+                z-index: 100;
+
+                display: grid;
+
+                grid-template-rows: 1fr 8fr;
+                grid-template-area: 
+                    "popup_header"
+                    "popup_content";
+            }
+
+            #popup_wrapper #popup_body .popup_header{
+                grid-area:"popup_header";
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px;
+                font-weight: bold;
+                background: blue;
+                color: white;
+            }
+
+            #popup_wrapper #popup_body .popup_content{
+                grid-area:"popup_content";
+                padding: 5px;
+            }
+
+            #popup_wrapper #popup_body .popup_close{
+                width: 20px;
+                height: 20px;
+                border-radius: 100%;
+                text-align: center;
+                cursor: pointer;
+                position: absolute;
+                top: 3px;
+                right: 3px;
+            }
+
+            #popup_wrapper #popup_background{
+                background: rgba(0,0,0,0.3);
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                z-index: 99;
+            }
+
+            .content{
+                grid-area:"content";
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+
+
+
+            .btn_circle{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: grey;
+                color:white;
+                margin: 5px;
+                padding: 0;
+                width: 50px;
+                height: 50px;
+                border-radius: 100%;
+                cursor: pointer;
+            }
+
+            .btn_circle:hover{
+                background-color: black;
+            }
+
+            .btn_green{
+                color:white;
+                background-color: #255625;
+            }
+
+            .btn_green:hover{
+                background-color: seagreen;
+            }
+
+            .btn_red{
+                color:white;
+                background-color: #c12e2a;
+            }
+
+            .btn_red:hover{
+
+                background-color: #d43f3a;
+            }
+
+        </style>
     </head>
     <body>
         <!-- ANIMATE CSS EXAMPLE -->
@@ -27,21 +166,201 @@ and open the template in the editor.
 
 
         <!-- ANIME JS EXAMPLE -->
-        <div class="test">
-            Test
+
+        <div hidden="hidden" id="popup_wrapper">
+            <div id="popup_body">
+                <div class="popup_header">
+                    This is header
+                </div>
+                <div class="popup_content">
+                    This is content
+                </div>
+
+                <div class="popup_close btn_red">
+                    X
+                </div>
+            </div>
+            <div id="popup_background"></div>
+
+
         </div>
+        <div id="app">
+            <div class="header">HEADER</div>
+            <div class="content">
+
+                <div class="btn_circle btn_green">
+                    OK
+                </div>
+                <div class="btn_circle btn_red">
+                    NO
+                </div>
+            </div>
+            <div class="header">FOOTER</div>
+
+
+        </div>
+
+
         <script>
-            anime({
-                targets: 'h4.test',
-                translateX: [
-                    {value: 100, duration: 1200},
-                    {value: 0, duration: 800}
-                ],
-                rotate: '1turn',
+
+            $ = jQuery;
+            $(document).ready(function () {
+                var btn_circle = $(".btn_circle");
+
+                var popup = {};
+                popup.dom_wrapper = $("#popup_wrapper");
+                popup.dom_wrapper.hide();
+                popup.dom_background = popup.dom_wrapper.find("#popup_background");
+                popup.dom_body = popup.dom_wrapper.find("#popup_body");
+                popup.dom_close = popup.dom_body.find(".popup_close");
+                popup.dom_header = popup.dom_body.find(".popup_header");
+                popup.width = "100%";
+                popup.height = "70%";
+
+                popup.close = function () {
+                    this.toogle("hide");
+                };
+
+                popup.open = function () {
+                    this.toogle("show");
+                };
+
+                popup.toogle = function (action) {
+                    var hRate = 500;
+                    var wRate = 700;
+                    var minRate = hRate / 2;
+                    var w = "0px";
+                    var h = "0px";
+
+                    if (action === "show") {
+                        w = popup.width;
+                        h = popup.height;
+                        popup.dom_body.show();
+                        popup.dom_wrapper.show();
+                        popup.dom_background.show();
+                    } else {
+                        popup.dom_background.hide();
+                        setTimeout(function () {
+                            popup.dom_body.hide();
+                            popup.dom_wrapper.hide();
+                        }, minRate);
+                    }
+
+                    var prop = {
+
+                        width: [
+                            {value: w, duration: wRate}
+                        ],
+                        height: [
+                            {value: h, duration: wRate}
+                        ]
+                    };
+
+                    animeExec("#" + popup.dom_body.attr("id"), prop);
+                };
+
+                popup.open();
+
+                popup.dom_close.click(function () {
+                    popup.close();
+                });
+
+                popup.dom_background.click(function () {
+                    popup.close();
+                });
+
+                function offsetNumberCss(val, offset, postfix) {
+                    try {
+                        var num = val.split(postfix);
+                        num = Number(num[0]);
+
+                        num = num + offset;
+
+                        var toRet = num + postfix;
+                        console.log(toRet);
+                        return toRet;
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+
+                btn_circle.click(function () {
+
+                    var offset = -5;
+                    var postfix = "px";
+
+                    var oriPad = "5px";
+                    var newPad = offsetNumberCss(oriPad, offset, postfix);
+
+                    var expandRate = 200;
+                    var contractRate = 300;
+
+                    var prop = {
+                        margin: [
+                            {value: newPad, duration: expandRate},
+                            {value: oriPad, duration: contractRate}
+                        ],
+                        padding: [
+                            {value: oriPad, duration: expandRate},
+                            {value: newPad, duration: contractRate}
+                        ],
+                        fontSize: [
+                            {value: '190%', duration: contractRate},
+                            {value: '100%', duration: expandRate}
+                        ]
+                    };
+
+                    var openDelay = (expandRate + contractRate) - 100;
+
+                    setTimeout(function () {
+                        popup.open();
+                    }, openDelay);
+
+                    animeExec(this, prop);
+                });
+
+
+                function animeExec(target, prop, duration, loop) {
+                    //set default
+                    if (typeof duration === "undefined") {
+                        duration = 2000;
+                    }
+                    if (typeof loop === "undefined") {
+                        loop = false;
+                    }
+
+
+                    var animeObj = {
+                        targets: target,
+                        duration: 2000,
+                        loop: false
+                    };
+
+                    for (var k in prop) {
+                        animeObj[k] = prop[k];
+                    }
+
+                    anime(animeObj);
+                }
+
+
+
+//                    fontSize: [
+//                        {value: '110%', duration: 500},
+//                        {value: '100%', duration: 200}
+//                    ],
+//                    translateY: [
+//                        {value: -5, duration: 500},
+//                        {value: 0, duration: 200}
+//                    ],
+                //rotate: '1turn',
                 //backgroundColor: '#FFF',
-                duration: 2000,
-                loop: true
+
+
             });
+
+
         </script>
 
 
