@@ -36,10 +36,12 @@ and open the template in the editor.
         <div id="app">
             <div class="header">HEADER</div>
             <div id="date_slider" class="slider">
-                <div class="slider_item item_left"></div>  
-                <div class="slider_item item_center"></div>  
-                <div class="slider_item item_right"></div>  
-            </div>
+                <div class="slider_items">
+                    <div class="slider_item item_left"></div>  
+                    <div class="slider_item item_center"></div>  
+                    <div class="slider_item item_right"></div>  
+                </div>
+            </div>  
             <div class="content">
 
                 <div class="btn_circle_wrapper">
@@ -68,7 +70,6 @@ and open the template in the editor.
 
                     //data ****************
                     this.data = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-                    this.emptyData = "";
                     this.focusIndex = 0;
 
                     //dom ****************
@@ -92,6 +93,10 @@ and open the template in the editor.
                     this.RIGHT = "right";
                     this.LEFT = "left";
 
+                    this.RIGHT_ARROW = " >>";
+                    this.LEFT_ARROW = "<< ";
+                    this.EMPTY_DATA = "";
+
                     this.init(4);
                 };
 
@@ -108,15 +113,15 @@ and open the template in the editor.
 
 
                         if (left < 0) {
-                            this.dom_left.html(this.emptyData);
+                            this.dom_left.html(this.EMPTY_DATA);
                         } else {
-                            this.dom_left.html(this.data[left]);
+                            this.dom_left.html(this.LEFT_ARROW + this.data[left]);
                         }
 
                         if (right >= this.data.length) {
-                            this.dom_right.html(this.emptyData);
+                            this.dom_right.html(this.EMPTY_DATA);
                         } else {
-                            this.dom_right.html(this.data[right]);
+                            this.dom_right.html(this.data[right] + this.RIGHT_ARROW);
                         }
 
                     }
