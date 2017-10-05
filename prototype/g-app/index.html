@@ -9,26 +9,11 @@ and open the template in the editor.
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!--                4.2KB-->
-        <!--        <link rel="stylesheet"
-                      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"> -->
-
-
-        <!--                11KB but then I have more control here-->
-        <script src="./js/anime.min.js"></script>
-        <link rel="stylesheet" href="css/app.css"> 
-        <script src="../../include/jquery-3.1.1.min.js"></script>
-     
+        <script src="../../js/anime.min.js"></script>
+        <link rel="stylesheet" href="main.css"> 
+        <script src="../../../../include/jquery-3.1.1.min.js"></script>
     </head>
     <body>
-        <!-- ANIMATE CSS EXAMPLE -->
-        <!-- https://daneden.github.io/animate.css/ -->
-        <!--        <h1 class="animated infinite bounce">Example</h1>
-                <div class="animated tada">Example</div> -->
-
-
-        <!-- ANIME JS EXAMPLE -->
 
         <!-- POPUP -->
         <div hidden="hidden" id="popup_wrapper">
@@ -50,12 +35,13 @@ and open the template in the editor.
         <!-- MAIN APP -->
         <div id="app">
             <div class="header">HEADER</div>
+            <div id="date_slider" class="slider">
+                <div class="slider_item item_left"></div>  
+                <div class="slider_item item_center"></div>  
+                <div class="slider_item item_right"></div>  
+            </div>
             <div class="content">
-                <div class="slider">
-                    <div class="slider_item">Sunday</div>  
-                    <div class="slider_item">Monday</div>  
-                    <div class="slider_item">Tuesday</div>  
-                </div>
+
                 <div class="btn_circle_wrapper">
                     <div class="btn_circle btn_green">
                         OK
@@ -67,7 +53,6 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-            <div class="header">FOOTER</div>
 
 
         </div>
@@ -78,6 +63,79 @@ and open the template in the editor.
             $ = jQuery;
             $(document).ready(function () {
                 var btn_circle = $(".btn_circle");
+
+                var Slider = function (id) {
+
+                    //data ****************
+                    this.data = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                    this.emptyData = "";
+                    this.focusIndex = 0;
+
+                    //dom ****************
+                    this.dom_parent = $("#" + id);
+                    this.dom_left = this.dom_parent.find(".item_left");
+                    this.dom_center = this.dom_parent.find(".item_center");
+                    this.dom_right = this.dom_parent.find(".item_right");
+
+                    //dom event****************
+                    var obj = this;
+
+                    this.dom_left.click(function () {
+                        obj.slide(obj.LEFT);
+                    });
+
+                    this.dom_right.click(function () {
+                        obj.slide(obj.RIGHT);
+                    });
+
+                    //constant *************
+                    this.RIGHT = "right";
+                    this.LEFT = "left";
+
+                    this.init(4);
+                };
+
+                Slider.prototype.init = function (focusIndex) {
+
+                    var left = focusIndex - 1;
+                    var center = focusIndex;
+                    var right = focusIndex + 1;
+
+
+                    if (focusIndex >= 0 && focusIndex < this.data.length) {
+                        this.dom_center.html(this.data[center]);
+                        this.focusIndex = focusIndex;
+
+
+                        if (left < 0) {
+                            this.dom_left.html(this.emptyData);
+                        } else {
+                            this.dom_left.html(this.data[left]);
+                        }
+
+                        if (right >= this.data.length) {
+                            this.dom_right.html(this.emptyData);
+                        } else {
+                            this.dom_right.html(this.data[right]);
+                        }
+
+                    }
+
+                };
+
+                Slider.prototype.slide = function (direction) {
+                    if (direction === this.RIGHT) {
+                        this.init(this.focusIndex + 1);
+                    } else if (direction === this.LEFT) {
+                        this.init(this.focusIndex - 1);
+                    }
+                };
+
+
+
+
+
+                var dateSlider = new Slider("date_slider");
 
                 var popup = {};
                 popup.dom_wrapper = $("#popup_wrapper");
@@ -217,17 +275,6 @@ and open the template in the editor.
                 }
 
 
-
-//                    fontSize: [
-//                        {value: '110%', duration: 500},
-//                        {value: '100%', duration: 200}
-//                    ],
-//                    translateY: [
-//                        {value: -5, duration: 500},
-//                        {value: 0, duration: 200}
-//                    ],
-                //rotate: '1turn',
-                //backgroundColor: '#FFF',
 
 
             });
