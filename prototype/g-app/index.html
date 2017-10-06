@@ -37,9 +37,9 @@ and open the template in the editor.
             <div class="header">HEADER</div>
             <div id="date_slider" class="slider">
                 <div class="slider_items">
-                    <div class="slider_item item_left"></div>  
-                    <div class="slider_item item_center"></div>  
-                    <div class="slider_item item_right"></div>  
+                    <div id='slider_item_left' class="slider_item item_left"></div>  
+                    <div id='slider_item_center' class="slider_item item_center"></div>  
+                    <div id='slider_item_right' class="slider_item item_right"></div>  
                 </div>
             </div>  
             <div class="content">
@@ -129,11 +129,64 @@ and open the template in the editor.
                 };
 
                 Slider.prototype.slide = function (direction) {
-                    if (direction === this.RIGHT) {
-                        this.init(this.focusIndex + 1);
-                    } else if (direction === this.LEFT) {
-                        this.init(this.focusIndex - 1);
+                    var obj = this;
+                    var outRate = 500;
+                    var inRate = 400;
+                    var smallInRateOffset = 200;
+
+                    var outPx = "150px";
+                    var outCenterPx = "300px";
+
+                    if (direction === obj.RIGHT) {
+                    } else if (direction === obj.LEFT) {
+                        outCenterPx = "-" + outCenterPx;
                     }
+
+                    var outCenterPxInverse = (-1 * offsetNumberCss(outCenterPx, 0, "px", true)) + "px";
+
+
+                    var propLeft = {
+                        translateX: [
+                            {value: "-" + outPx, duration: outRate},
+                            {value: "0px", duration: inRate - smallInRateOffset}
+                        ]
+                    };
+                    var propCenter = {
+                        translateX: [
+                            {value: outCenterPx, duration: outRate}
+                        ]
+                    };
+                    var propRight = {
+                        translateX: [
+                            {value: outPx, duration: outRate},
+                            {value: "0px", duration: inRate - smallInRateOffset}
+                        ]
+                    };
+
+                    animeExec("#" + this.dom_left.attr("id"), propLeft);
+                    animeExec("#" + this.dom_center.attr("id"), propCenter);
+                    animeExec("#" + this.dom_right.attr("id"), propRight);
+
+                    setTimeout(function () {
+                        if (direction === obj.RIGHT) {
+                            obj.init(obj.focusIndex + 1);
+                        } else if (direction === obj.LEFT) {
+                            obj.init(obj.focusIndex - 1);
+                        }
+                        
+                        obj.dom_center.css("transform", "translateX(" + outCenterPxInverse + ")");
+
+                        var propCenter = {
+                            translateX: [
+                                {value: "0px", duration: inRate}
+                            ]
+                        };
+                        
+                        animeExec("#" + obj.dom_center.attr("id"), propCenter);
+
+
+                    }, outRate);
+
                 };
 
 
@@ -203,14 +256,20 @@ and open the template in the editor.
                     popup.close();
                 });
 
-                function offsetNumberCss(val, offset, postfix) {
+                function offsetNumberCss(val, offset, postfix, returnNumOnly) {
                     try {
                         var num = val.split(postfix);
                         num = Number(num[0]);
 
                         num = num + offset;
+                        var toRet;
 
-                        var toRet = num + postfix;
+                        if (typeof returnNumOnly !== "undefined" && returnNumOnly) {
+                            toRet = num;
+                        } else {
+                            toRet = num + postfix;
+                        }
+
                         return toRet;
 
                     } catch (e) {
