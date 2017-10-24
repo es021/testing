@@ -76,11 +76,11 @@ body{
 .slider .slider_item{
     /*    transform: translateX(-150px);*/
     /*    overflow: hidden;*/
-    
+
     display:flex;
     align-items: center;
     justify-content: center;
-/*    border: dotted black 1px;*/
+    /*    border: dotted black 1px;*/
     padding: 0 4px;
     text-transform: uppercase;
     cursor: pointer;
@@ -217,3 +217,10 @@ body{
     background-color: #d43f3a;
 }
 
+
+.flex_center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}

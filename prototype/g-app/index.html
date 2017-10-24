@@ -173,7 +173,7 @@ and open the template in the editor.
                         } else if (direction === obj.LEFT) {
                             obj.init(obj.focusIndex - 1);
                         }
-                        
+
                         obj.dom_center.css("transform", "translateX(" + outCenterPxInverse + ")");
 
                         var propCenter = {
@@ -181,7 +181,7 @@ and open the template in the editor.
                                 {value: "0px", duration: inRate}
                             ]
                         };
-                        
+
                         animeExec("#" + obj.dom_center.attr("id"), propCenter);
 
 
@@ -189,48 +189,58 @@ and open the template in the editor.
 
                 };
 
-
-
-
-
                 var dateSlider = new Slider("date_slider");
 
-                var popup = {};
-                popup.dom_wrapper = $("#popup_wrapper");
-                popup.dom_wrapper.hide();
-                popup.dom_background = popup.dom_wrapper.find("#popup_background");
-                popup.dom_body = popup.dom_wrapper.find("#popup_body");
-                popup.dom_close = popup.dom_body.find(".popup_close");
-                popup.dom_header = popup.dom_body.find(".popup_header");
-                popup.width = "100%";
-                popup.height = "70%";
 
-                popup.close = function () {
+
+                var Popup = function () {
+                    this.dom_wrapper = $("#popup_wrapper");
+                    this.dom_wrapper.hide();
+                    this.dom_background = this.dom_wrapper.find("#popup_background");
+                    this.dom_body = this.dom_wrapper.find("#popup_body");
+                    this.dom_close = this.dom_body.find(".popup_close");
+                    this.dom_header = this.dom_body.find(".popup_header");
+                    this.dom_content = this.dom_body.find(".popup_content");
+
+                    this.width = "100%";
+                    this.height = "70%";
+
+                    this.registerDomEvent();
+                };
+
+
+                Popup.prototype.close = function () {
                     this.toogle("hide");
                 };
 
-                popup.open = function () {
+                Popup.prototype.open = function (title, content) {
                     this.toogle("show");
+                    this.dom_header.html("");
+                    this.dom_header.append(title);
+                    this.dom_content.html("");
+                    this.dom_content.append(content);
                 };
 
-                popup.toogle = function (action) {
+
+                Popup.prototype.toogle = function (action) {
                     var hRate = 500;
                     var wRate = 700;
                     var minRate = hRate / 2;
                     var w = "0px";
                     var h = "0px";
+                    var obj = this;
 
                     if (action === "show") {
-                        w = popup.width;
-                        h = popup.height;
-                        popup.dom_body.show();
-                        popup.dom_wrapper.show();
-                        popup.dom_background.show();
+                        w = this.width;
+                        h = this.height;
+                        this.dom_body.show();
+                        this.dom_wrapper.show();
+                        this.dom_background.show();
                     } else {
-                        popup.dom_background.hide();
+                        this.dom_background.hide();
                         setTimeout(function () {
-                            popup.dom_body.hide();
-                            popup.dom_wrapper.hide();
+                            obj.dom_wrapper.hide();
+                            obj.dom_body.hide();
                         }, minRate);
                     }
 
@@ -244,17 +254,22 @@ and open the template in the editor.
                         ]
                     };
 
-                    animeExec("#" + popup.dom_body.attr("id"), prop);
+                    animeExec("#" + this.dom_body.attr("id"), prop);
                 };
 
 
-                popup.dom_close.click(function () {
-                    popup.close();
-                });
+                Popup.prototype.registerDomEvent = function () {
+                    var obj = this;
+                    this.dom_close.click(function () {
+                        obj.close();
+                    });
 
-                popup.dom_background.click(function () {
-                    popup.close();
-                });
+                    this.dom_background.click(function () {
+                        obj.close();
+                    });
+                };
+
+                popup = new Popup();
 
                 function offsetNumberCss(val, offset, postfix, returnNumOnly) {
                     try {
@@ -308,8 +323,14 @@ and open the template in the editor.
 
                     var openDelay = (expandRate + contractRate) - 100;
 
+
+                    var okMessage = {};
+                    okMessage.title = "Congratulation!";
+                    okMessage.content = jQuery("<div class='flex_center'></div>");
+                    okMessage.content.append("Keep It Up :)");
+                    
                     setTimeout(function () {
-                        popup.open();
+                        popup.open(okMessage.title, okMessage.content);
                     }, openDelay);
 
                     animeExec(this, prop);
